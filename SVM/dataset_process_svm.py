@@ -83,7 +83,7 @@ class SVM_PROCESS():
 
     def scale_process(self, x_train, x_test):
         
-        print("scaling ...")
+        # print("scaling ...")
 
         scaler = preprocessing.MinMaxScaler(copy = True, feature_range = (0, 1))
 
@@ -103,7 +103,7 @@ class SVM_PROCESS():
         train_dir = self.train_dir
         test_dir = self.test_dir
 
-        print("data set: {}".format(num_set))
+        # print("data set: {}".format(num_set))
 
         x_train = []
         y_train = []
