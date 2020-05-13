@@ -1,8 +1,0 @@
-SVM-dev：
-
-ICASSP2020 用的SVM代码，后面再回顾一下，尽可能添加详细的注释，
-另外也有很多需要优化的地方，当时对sklearn 这个库还不太熟悉。
-
-DNN:
-
-从LERC2020开始记录，主要包含DNN, LSTM, BilSTM, Attention, CNN 
