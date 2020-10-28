@@ -1,10 +1,10 @@
-#DisfluencyDetection 
-##该项目是当前修士阶段的主要研究，对CSJ数据集里面语音的流畅或者非流畅部分进行判断以及检出
-##第一阶段是对一个10秒左右的data chunk整体进行分类，主要的特征分析，找出有效的特征
+# DisfluencyDetection 
+## 该项目是当前修士阶段的主要研究，对CSJ数据集里面语音的流畅或者非流畅部分进行判断以及检出
+## 第一阶段是对一个10秒左右的data chunk整体进行分类，主要的特征分析，找出有效的特征
 
 ### SVM：
 
-SVM模型发表在[ICASSP2020]( https://ieeexplore.ieee.org/document/9053452)上，有兴趣的同学可以看一下
+SVM模型发表在[ICASSP2020](https://ieeexplore.ieee.org/document/9053452)上，有兴趣的同学可以看一下
 
 其中有两个2分类任务，流畅 vs. 非流畅+中立 以及 非流畅 vs. 流畅+中立
 
