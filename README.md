@@ -4,7 +4,7 @@
 
 ### SVM：
 
-SVM模型发表在[ICASSP2020](https://ieeexplore.ieee.org/document/9053452)上，有兴趣的同学可以看一下
+SVM模型发表在[ICASSP2020](https://ieeexplore.ieee.org/document/9053452)上，有兴趣的同学可以看一下，
 其中有两个2分类任务，流畅 vs. 非流畅+中立 以及 非流畅 vs. 流畅+中立
 
 ### DNN:
