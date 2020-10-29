@@ -153,7 +153,7 @@ class LSTM_Model(DNN_Model):
         lstm_mask = Masking(mask_value = Config.MASKING_VALUE, input_shape = (self.time_steps, self.input_shape))(lstm_features)
         # lstm_dense = Dense(128, activation = None, name = "lstm_dense")(lstm_mask)
         # lstm_dense = LeakyReLU()(lstm_dense)
-        lstm_seq = LSTM(128, return_sequences = True, name = "lstm_input")(lstm_mask)
+        lstm_seq = Bidirectional(LSTM(128, return_sequences = True, name = "lstm_input"))(lstm_mask)
         lstm_output = Lambda(lambda t: tensorflow.reduce_mean(t, 1))(lstm_seq)
         # lstm_output = tensorflow.reduce_mean(lstm_seq, 1)
         
