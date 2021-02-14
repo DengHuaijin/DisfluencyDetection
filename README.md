@@ -22,5 +22,14 @@ SVM模型发表在[ICASSP2020](https://ieeexplore.ieee.org/document/9053452)上�
 静态全局特征就是用各种函数对时序特征沿着时间方向进行全局处理，比如max，min，mean..等等，
 将LSTM直接换成DNN，其中jitter shimmer对非流畅语音分类效果提升显著，该结果投稿了SLT2021，目前还在审稿中。
 
+### Deep Residual Network + BiLSTM
+
+用语音的spectrogram特征和ResNet+BiLSTM结构进行端到端分类，参考论文：
+[Detecting Multiple Speech Disfluencies using a Deep Residual Network with Bidirectional Long Short-Term Memory](
+https://arxiv.org/abs/1910.12590)。和前面一样，数据还是10秒左右的音频文件，这里除了音频的spectrogram
+没有使用前面的文本特征
+
+网络的搭建和训练是基于NVIDIA的[OpenSeq2Seq](https://github.com/NVIDIA/OpenSeq2Seq)工具，
+reidual block的具体实现在ResidualNetwork/models/resnet_block.py中
 
 ### 第二阶段是通过加入ASR，实时地根据识别结果输出单词级别的非流畅部分
