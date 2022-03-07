@@ -32,4 +32,23 @@ https://arxiv.org/abs/1910.12590)。和前面一样，数据还是10秒左右的
 网络的搭建和训练是基于NVIDIA的[OpenSeq2Seq](https://github.com/NVIDIA/OpenSeq2Seq)工具，
 reidual block的具体实现在ResidualNetwork/models/resnet_block.py中
 
-### 第二阶段是通过加入ASR，实时地根据识别结果输出单词级别的非流畅部分
+### 第二阶段是通过加入ASR，实时地根据识别结果输出单词级别的非流畅部分 (skip)
+
+### 当前完成的工作是用深度端到端模型来替换前面的DNN和LSTM
+
+下面所有模型均通过nvidia的[Nemo](https://github.com/NVIDIA/NeMo)来进行部署和训练
+并且特征均采用mel bin为80的Mel Spectrogram
+
+### SpeakerNet
+
+[SpeakerNet](https://arxiv.org/pdf/2010.12653.pdf)是被提出来做说话人识别和声纹识别的模型，encoder部分是Quartznet模型，decoder部分直接用了stats pooling来进行x-vector的提取，
+因此可以直接迁移到我们的分类任务中来
+
+### Transformer，Conformer
+
+[Conformer](https://arxiv.org/pdf/2005.08100.pdf?ref=https://githubhelp.com)是被提出来做ASR的模型, encoder部分是卷积和transformer的结合，原本decoder是可以直接是全连接+CTC，或者Attention decoder，在这里我们
+将其替换为stats pooling+全连接；另外作为对比，直接将transformer作为encoder，去掉了卷积部分；2种模型结构如下图所示：
+
+<div align="center">
+<img src="https://github.com/DengHuaijin/DisfluencyDetection/figs/model.jpg" width="600">
+</div>

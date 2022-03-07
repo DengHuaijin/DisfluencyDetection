@@ -1,0 +1,169 @@
+name: &name "Transformer"
+sample_rate: &sample_rate 16000
+repeat: &rep 2
+dropout: &drop 0.5
+separable: &separable True
+n_filters: &n_filters 512
+d_model: &d_model 256
+labels: &labels ["others", "positive"]
+
+model:
+  train_ds:
+    manifest_filepath: null
+    sample_rate: 16000
+    labels: *labels
+    batch_size: 64
+    shuffle: False
+    time_length: 8
+    max_duration: 35
+    is_tarred: False
+    tarred_audio_filepaths: null
+    tarred_shard_strategy: "scatter"
+    augmentor:
+    #    speed:
+    #      prob: 0.4
+    #      sr: *sample_rate
+    #      resample_type: "kaiser_best"
+    #      min_speed_rate: 0.9
+    #      max_speed_rate: 1.1
+        noise:
+          prob: 0.6
+          manifest_path: "manifest/noise.json"
+          min_snr_db: 5
+          max_snr_db: 15
+          # rir_noise_aug:
+          # prob: 0.4
+          # max_duration: 2.0
+          # max_additions: 5
+          # noise_manifest_paths: ["manifest/musan/noise.json"]
+          # bg_noise_manifest_paths: ["manifest/musan/music.json"]
+  
+  validation_ds:
+    manifest_filepath: null
+    sample_rate: 16000
+    labels: *labels
+    batch_size: 64
+    shuffle: False
+    time_length: 8
+    max_duration: 35
+
+  test_ds:
+    manifest_filepath: null
+    sample_rate: 16000
+    labels: null
+    batch_size: 1
+    shuffle: True
+    time_length: 8
+    embedding_dir: '.'
+    #augmentor:
+    #    speed:
+    #      prob: 0.5
+    #      sr: *sample_rate
+    #      resample_type: "kaiser_best"
+    #      min_speed_rate: 0.9
+    #      max_speed_rate: 1.1
+    #    noise:
+    #      prob: 0.5
+    #      manifest_path: "manifest/noise.json"
+    #      min_snr_db: 5
+    #      max_snr_db: 15
+    #    rir_noise_aug:
+    #      prob: 0.6
+    #      max_duration: 2.0
+    #      max_additions: 5
+    #      noise_manifest_paths: ["manifest/musan/noise.json"]
+    #      bg_noise_manifest_paths: ["manifest/musan/music.json"]
+          
+  preprocessor:
+    _target_: nemo.collections.asr.modules.AudioToMelSpectrogramPreprocessor
+    normalize: "per_features"
+    window_size: 0.02
+    sample_rate: *sample_rate
+    window_stride: 0.01
+    window: "hann"
+    features: &n_mels 64
+    n_fft: 512
+    frame_splicing: 1
+    dither: 0.00001
+  
+  encoder:
+    _target_: nemo.collections.asr.modules.TransformerEncoder
+    feat_in: *n_mels
+    n_layers: 4
+    d_model: *d_model
+    
+    subsampling: vggnet
+    subsampling_factor: 2
+    subsampling_conv_channels: -1
+
+    ff_expansion_factor: 4
+
+    self_attention_model: rel_pos
+    n_heads: 16
+
+    att_context_size: [-1, -1]
+    xscaling: true
+    untie_biases: true
+    pos_emb_max_len: 5000
+
+    conv_kernel_size: 31
+
+    dropout: 0.1
+    dropout_emb: 0.0
+    dropout_att: 0.1
+
+  decoder:
+    _target_: nemo.collections.asr.modules.SpeakerDecoder
+    feat_in: *d_model
+    num_classes: 2
+    pool_mode: 'xvector'
+    emb_sizes: [512,512]
+    angular: False
+
+  loss:
+    weight: [1, 0.0769]
+    scale: 30
+    margin: 0.2
+
+  optim:
+    name: adam
+    lr: .001
+    # optimizer arguments
+    args:
+      # name: auto
+      weight_decay: 0.001
+      # momentum: 0.9
+
+    # scheduler setup
+    sched:
+      name: CosineAnnealing
+      iters_per_batch: 1 # computed at runtime
+      max_steps: null # computed at runtime or explicitly set here
+
+    # scheduler config override
+      args:
+       # name: auto
+       warmup_steps: null
+       warmup_ratio: 0.1
+       min_lr: 0.000001
+       last_epoch: -1
+
+trainer:
+  gpus: 2 # number of gpus
+  max_epochs: 15
+  max_steps: null # computed at runtime if not set
+  num_nodes: 1
+  accelerator: ddp
+  accumulate_grad_batches: 1
+  amp_level: O0
+  deterministic: True
+  checkpoint_callback: False
+  logger: False
+  log_every_n_steps: 1  # Interval of logging.
+  val_check_interval: 0.25  # Set to 0.25 to check 4 times per epoch, or an int for number of iterations
+
+exp_manager:
+  exp_dir: null
+  name: *name
+  create_tensorboard_logger: True
+  create_checkpoint_callback: True
