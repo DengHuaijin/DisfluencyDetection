@@ -20,7 +20,8 @@ SVM模型发表在[ICASSP2020](https://ieeexplore.ieee.org/document/9053452)上�
 #### 静态全局语音特征
 
 静态全局特征就是用各种函数对时序特征沿着时间方向进行全局处理，比如max，min，mean..等等，
-将LSTM直接换成DNN，其中jitter shimmer对非流畅语音分类效果提升显著，该结果投稿了SLT2021，目前还在审稿中。
+将LSTM直接换成DNN，其中jitter shimmer对非流畅语音分类效果提升显著，该结果投稿了O-COCOSDA 2021, 详细可以参考这篇论文，
+里面也包含了对之前工作的总结
 
 ### Deep Residual Network + BiLSTM
 
