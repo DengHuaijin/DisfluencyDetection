@@ -50,5 +50,5 @@ reidual block的具体实现在ResidualNetwork/models/resnet_block.py中
 将其替换为stats pooling+全连接；另外作为对比，直接将transformer作为encoder，去掉了卷积部分；2种模型结构如下图所示：
 
 <div align="center">
-<img src="https://github.com/DengHuaijin/DisfluencyDetection/tree/master/figs/model.jpg" width="600">
+<img src="https://github.com/DengHuaijin/DisfluencyDetection/tree/master/figs/model.jpg" width="400">
 </div>
